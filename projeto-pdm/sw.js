@@ -12,7 +12,7 @@ const pageCache = new CacheFirst({
       statuses: [0, 200],
     }),
     new ExpirationPlugin({
-      maxAgeSeconds: 30 * 24 * 60 * 60,
+      maxAgeSeconds: 30 * 24 * 60 * 60, // 30 dias
     }),
   ],
 });
@@ -24,15 +24,12 @@ warmStrategyCache({
 });
 
 // registrando a rota
-registerRoute(
-  ({ request }) => request.mode === 'navigate',
-  pageCache
-);
+registerRoute(({ request }) => request.mode === 'navigate', pageCache);
 
 registerRoute(
   // configurando cache de assets
-  ({ request }) => ['style', 'script', 'worker']
-    .includes(request.destination),
+  ({ request }) =>
+    ['style', 'script', 'worker'].includes(request.destination),
   new StaleWhileRevalidate({
     cacheName: 'asset-cache',
     plugins: [
@@ -40,25 +37,24 @@ registerRoute(
         statuses: [0, 200],
       }),
     ],
-  }),
+  })
 );
 
+// configurando offline fallback
 offlineFallback({
-  // configurando offline fallback
   pageFallback: '/offline.html',
 });
 
+// configurando cache de imagens
 const imageRoute = new Route(
-  ({ request }) => {
-    return request.destination === 'image';
-  },
+  ({ request }) => request.destination === 'image',
   new CacheFirst({
     cacheName: 'images',
     plugins: [
       new ExpirationPlugin({
-        maxAgeSeconds: 60 * 60 * 24 * 30,
-      })
-    ]
+        maxAgeSeconds: 60 * 60 * 24 * 30, // 30 dias
+      }),
+    ],
   })
 );
 
