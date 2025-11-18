@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="x-ua-compatible" content="ie=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PWA – Câmera</title>
+
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="images/pwa-icon-256.png" />
+  <link rel="icon" href="images/pwa-icon-256.png" sizes="256x256" />
+  <meta name="theme-color" content="white" />
+
+  <!-- External JS files -->
+  <script type="module" src="js/main.js"></script>
+  <script type="module" src="js/db.js"></script>
+
+</head>
+
+<body>
+  <!-- Camera Section -->
+  <main id="camera">
+    <!-- Camera sensor (lente) -->
+    <canvas id="camera-sensor"></canvas>
+
+    <!-- Camera view (visualização) -->
+    <video id="camera-view" autoplay playsinline></video>
+
+    <!-- Camera output -->
+    <img src="" alt="" id="camera-output" />
+
+    <!-- Botões de câmera -->
+    <button id="camera-trigger">Tirar foto</button>
+    <button id="camera-change">Trocar camera</button>
+  </main>
+
+  <!-- PWA Section -->
+  <div class="container">
+    <h1 class="title">Minha primeira PWA</h1>
+    <div style="text-align: center;">
+      <img src="/images/pwa-icon-256.png" alt="pwa" width="256" height="256" />
+    </div>
+    <div style="text-align: center;">
+      <button id="btnSalvar">Salvar</button>
+      <button id="btnListar">Listar</button>
+    </div>
+  </div>
+  <output></output>
+
+</body>
+
+</html>
