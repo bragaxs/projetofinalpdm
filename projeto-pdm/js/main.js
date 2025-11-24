@@ -15,18 +15,20 @@ if ('serviceWorker' in navigator) {
 var constraints = { video: { facingMode: "user" }, audio: false };
 function toggleCamera() {
   if (constraints.video.facingMode === "user") {
-    constraints.assign({ video: { facingMode: "environment" }, audio: false });
+    constraints.video.facingMode = "environment";
   } else {
-    constraints.assign({ video: { facingMode: "user" }, audio: false });
+    constraints.video.facingMode = "user";
   }
 }
 
+
 // capturando os elementos em tela
-const cameraView = document.querySelector("#camera--view"),
-  cameraOutput = document.querySelector("#camera--output"),
-  cameraSensor = document.querySelector("#camera--sensor"),
-  cameraTrigger = document.querySelector("#camera--trigger"),
-  trocarCam = document.querySelector("#trocar--cam");
+const cameraView = document.querySelector("#camera-view"),
+  cameraOutput = document.querySelector("#camera-output"),
+  cameraSensor = document.querySelector("#camera-sensor"),
+  cameraTrigger = document.querySelector("#camera-trigger")
+  const trocarCam = document.querySelector("#camera-change");
+
 
 // Estabelecendo o acesso à câmera e inicializando a visualização
 function cameraStart() {
