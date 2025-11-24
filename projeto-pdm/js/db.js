@@ -22,7 +22,7 @@ window.addEventListener("DOMContentLoaded", () => {
   document.getElementById("btnListar").onclick = getData;
 });
 
-// SALVAR FOTO
+
 async function addData() {
   const nome = "Foto-" + Date.now();
   const foto = document.querySelector("#camera-output").src;
@@ -39,7 +39,7 @@ async function addData() {
   showResult("Foto salva!");
 }
 
-// LISTAR FOTOS
+
 async function getData() {
   const lista = await db.getAll('pessoas');
 
@@ -59,7 +59,7 @@ async function getData() {
   });
 }
 
-// EXIBIR TEXTO
+
 function showResult(text) {
   document.querySelector("output").innerHTML = text;
 }
