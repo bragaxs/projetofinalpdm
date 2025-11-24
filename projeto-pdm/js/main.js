@@ -13,6 +13,7 @@ if ('serviceWorker' in navigator) {
 
 // configurando as constraints do video stream
 var constraints = { video: { facingMode: "user" }, audio: false };
+
 function toggleCamera() {
   if (constraints.video.facingMode === "user") {
     constraints.video.facingMode = "environment";
@@ -21,21 +22,18 @@ function toggleCamera() {
   }
 }
 
-
 // capturando os elementos em tela
 const cameraView = document.querySelector("#camera-view"),
   cameraOutput = document.querySelector("#camera-output"),
   cameraSensor = document.querySelector("#camera-sensor"),
-  cameraTrigger = document.querySelector("#camera-trigger")
-  const trocarCam = document.querySelector("#camera-change");
-
+  cameraTrigger = document.querySelector("#camera-trigger"),
+  trocarCam = document.querySelector("#camera-change");
 
 // Estabelecendo o acesso à câmera e inicializando a visualização
 function cameraStart() {
   navigator.mediaDevices
     .getUserMedia(constraints)
     .then(function (stream) {
-      let track = stream.getTracks()[0];
       cameraView.srcObject = stream;
     })
     .catch(function (error) {
@@ -52,8 +50,19 @@ cameraTrigger.onclick = function () {
   cameraOutput.classList.add("taken");
 };
 
+// TROCAR CÂMERA (EXATAMENTE COMO VOCÊ FEZ, SÓ PARANDO O STREAM)
 trocarCam.onclick = function () {
+
+  // troca o modo frontal/traseira
   toggleCamera();
+
+  // para o stream atual
+  let stream = cameraView.srcObject;
+  if (stream) {
+    stream.getTracks().forEach(t => t.stop());
+  }
+
+  // reinicia com a nova câmera
   cameraStart();
 }
 
