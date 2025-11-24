@@ -1,97 +1,65 @@
-import { openDB } from "idb";
+import { openDB } from "https://cdn.jsdelivr.net/npm/idb@7/+esm";
 
 let db;
 
 async function createDB() {
-  try {
-    db = await openDB('banco', 1, {
-      upgrade(db, oldVersion, newVersion, transaction) {
-        switch (oldVersion) {
-          case 0:
-          case 1:
-            const store = db.createObjectStore('pessoas', {
-              keyPath: 'nome'
-            });
-            store.createIndex('id', 'id');
-            showResult('Banco de dados criado!');
-        }
-      }
-    });
-    showResult("Banco de dados aberto.");
-  } catch (e) {
-    showResult("Erro ao criar o banco de dados: " + e.message);
-  }
+  db = await openDB('banco', 1, {
+    upgrade(db) {
+      const store = db.createObjectStore('pessoas', {
+        keyPath: 'nome'
+      });
+      store.createIndex('foto', 'foto');
+    }
+  });
+
+  showResult("Banco de dados criado/aberto.");
 }
 
-window.addEventListener("DOMContentLoaded", async event => {
+window.addEventListener("DOMContentLoaded", () => {
   createDB();
-  document.getElementById("btnSalvar").addEventListener("click", addData);
-  document.getElementById("btnListar").addEventListener("click", getData);
+
+  document.getElementById("btnSalvar").onclick = addData;
+  document.getElementById("btnListar").onclick = getData;
 });
 
-// -------------------------------------
-// SALVAR
-// -------------------------------------
+// SALVAR FOTO
 async function addData() {
-  const nomeInput = document.getElementById("input").value;
+  const nome = "Foto-" + Date.now();
+  const foto = document.querySelector("#camera-output").src;
 
-  if (!nomeInput) {
-    showResult("Por favor, insira um nome.");
+  if (!foto) {
+    showResult("Tire uma foto antes de salvar.");
     return;
   }
 
-  // foto atual da câmera (base64)
-  const fotoBase64 = document.querySelector("#camera-output").src;
-
-  const tx = await db.transaction('pessoas', 'readwrite');
-  const store = tx.objectStore('pessoas');
-
-  store.add({
-    nome: nomeInput,
-    foto: fotoBase64
-  });
-
+  const tx = db.transaction('pessoas', 'readwrite');
+  await tx.store.add({ nome, foto });
   await tx.done;
-  showResult(`Pessoa ${nomeInput} adicionada ao banco.`);
+
+  showResult("Foto salva!");
 }
 
-// -------------------------------------
-// LISTAR
-// -------------------------------------
+// LISTAR FOTOS
 async function getData() {
-  if (!db) {
-    showResult("O banco de dados está fechado");
+  const lista = await db.getAll('pessoas');
+
+  if (!lista.length) {
+    showResult("Nenhum dado salvo.");
     return;
   }
 
-  const tx = await db.transaction('pessoas', 'readonly');
-  const store = tx.objectStore('pessoas');
-  const pessoas = await store.getAll();
+  const container = document.querySelector("output");
+  container.innerHTML = "";
 
-  const output = document.querySelector("output");
-
-  if (pessoas.length === 0) {
-    output.innerHTML = "Não há nenhum dado no banco!";
-    return;
-  }
-
-  // limpa tela
-  output.innerHTML = "<h3>Dados do Banco:</h3>";
-
-  // pega o template HTML separado
-  const template = document.getElementById("pessoa-template");
-
-  pessoas.forEach(p => {
-    const clone = template.content.cloneNode(true);
-
-    clone.querySelector(".pessoa-nome").textContent = p.nome;
-    clone.querySelector(".pessoa-foto").src = p.foto;
-
-    output.appendChild(clone);
+  lista.forEach(item => {
+    const t = document.getElementById("item-template").content.cloneNode(true);
+    t.querySelector(".nome").textContent = item.nome;
+    t.querySelector(".foto").src = item.foto;
+    container.appendChild(t);
   });
 }
 
-// -------------------------------------
+// EXIBIR TEXTO
 function showResult(text) {
   document.querySelector("output").innerHTML = text;
 }
