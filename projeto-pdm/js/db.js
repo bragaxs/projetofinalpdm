@@ -10,10 +10,8 @@ async function createDB() {
           case 0:
           case 1:
             const store = db.createObjectStore('pessoas', {
-              // A propriedade nome será o campo chave
               keyPath: 'nome'
             });
-            // Criando um índice id na store, deve estar contido no objeto do banco.
             store.createIndex('id', 'id');
             showResult('Banco de dados criado!');
         }
@@ -31,39 +29,69 @@ window.addEventListener("DOMContentLoaded", async event => {
   document.getElementById("btnListar").addEventListener("click", getData);
 });
 
-// Função para adicionar dados ao banco
+// -------------------------------------
+// SALVAR
+// -------------------------------------
 async function addData() {
-  const nomeInput = document.getElementById("input").value;  // Pegando o valor do input
+  const nomeInput = document.getElementById("input").value;
+
   if (!nomeInput) {
     showResult("Por favor, insira um nome.");
     return;
   }
 
+  // foto atual da câmera (base64)
+  const fotoBase64 = document.querySelector("#camera-output").src;
+
   const tx = await db.transaction('pessoas', 'readwrite');
   const store = tx.objectStore('pessoas');
-  store.add({ nome: nomeInput }); // Usando 'nome' como chave
+
+  store.add({
+    nome: nomeInput,
+    foto: fotoBase64
+  });
+
   await tx.done;
   showResult(`Pessoa ${nomeInput} adicionada ao banco.`);
 }
 
-// Função para listar dados do banco
+// -------------------------------------
+// LISTAR
+// -------------------------------------
 async function getData() {
-  if (db == undefined) {
+  if (!db) {
     showResult("O banco de dados está fechado");
     return;
   }
 
   const tx = await db.transaction('pessoas', 'readonly');
   const store = tx.objectStore('pessoas');
-  const value = await store.getAll();
-  if (value.length > 0) {
-    showResult("Dados do banco: " + JSON.stringify(value));
-  } else {
-    showResult("Não há nenhum dado no banco!");
+  const pessoas = await store.getAll();
+
+  const output = document.querySelector("output");
+
+  if (pessoas.length === 0) {
+    output.innerHTML = "Não há nenhum dado no banco!";
+    return;
   }
+
+  // limpa tela
+  output.innerHTML = "<h3>Dados do Banco:</h3>";
+
+  // pega o template HTML separado
+  const template = document.getElementById("pessoa-template");
+
+  pessoas.forEach(p => {
+    const clone = template.content.cloneNode(true);
+
+    clone.querySelector(".pessoa-nome").textContent = p.nome;
+    clone.querySelector(".pessoa-foto").src = p.foto;
+
+    output.appendChild(clone);
+  });
 }
 
-// Função para mostrar resultados na tela
+// -------------------------------------
 function showResult(text) {
   document.querySelector("output").innerHTML = text;
 }
