@@ -20,6 +20,11 @@ window.addEventListener("DOMContentLoaded", () => {
 
   document.getElementById("btnSalvar").onclick = addData;
   document.getElementById("btnListar").onclick = getData;
+ document.getElementById("btnExcluir").onclick = async () => {
+    await db.clear('pessoas');
+    document.querySelector("output").innerHTML = "";
+    alert("Todos os dados foram excluídos.");
+};
 });
 
 

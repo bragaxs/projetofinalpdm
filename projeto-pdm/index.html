@@ -17,25 +17,30 @@
 <body>
 
   <!-- CAMERA -->
-  <main id="camera">
-    <canvas id="camera-sensor"></canvas>
-    <video id="camera-view" autoplay playsinline></video>
-    <img src="" alt="" id="camera-output" />
+  <main id="camera" style="display:flex; flex-direction:column; align-items:center; gap:10px; padding:10px;">
 
-    <button id="camera-trigger">Tirar foto</button>
-    <button id="camera-change">Trocar camera</button>
+    <!-- Área da câmera (metade superior) -->
+    <div style="width:100%; max-width:500px; height:300px; position:relative; overflow:hidden; border-radius:10px;">
+      <canvas id="camera-sensor" style="display:none;"></canvas>
+      <video id="camera-view" autoplay playsinline style="width:100%; height:100%; object-fit:cover;"></video>
+      <img src="" alt="" id="camera-output"
+        style="display:none; width:100%; height:100%; object-fit:contain; background:#000;" />
+    </div>
+
+    <!-- Botões da câmera -->
+    <div style="display:flex; gap:10px; margin-top:10px;">
+      <button id="camera-trigger">Tirar foto</button>
+      <button id="camera-change">Trocar câmera</button>
+    </div>
+
   </main>
 
-  <!-- PWA -->
-  <div class="container">
-    <h1 class="title">Minha primeira PWA</h1>
-    <div style="text-align: center;">
-      <img src="/images/pwa-icon-256.png" alt="pwa" width="256" height="256" />
-    </div>
-    <div style="text-align: center;">
-      <button id="btnSalvar">Salvar</button>
-      <button id="btnListar">Listar</button>
-    </div>
+
+  <!-- Botões da PWA -->
+  <div style="text-align:center; margin-top:20px; display:flex; justify-content:center; gap:10px;">
+    <button id="btnSalvar">Salvar</button>
+    <button id="btnListar">Listar</button>
+    <button id="btnExcluir">Excluir</button>
   </div>
 
   <!-- Template para listar imagens -->
@@ -52,6 +57,7 @@
   <!-- Scripts -->
   <script type="module" src="js/main.js"></script>
   <script type="module" src="js/db.js"></script>
+
 </body>
 
 </html>
