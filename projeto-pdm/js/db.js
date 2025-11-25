@@ -24,6 +24,7 @@ window.addEventListener("DOMContentLoaded", () => {
     await db.clear('pessoas');
     document.querySelector("output").innerHTML = "";
     alert("Todos os dados foram excluídos.");
+
 };
 });
 
@@ -31,6 +32,8 @@ window.addEventListener("DOMContentLoaded", () => {
 async function addData() {
   const nome = "Foto-" + Date.now();
   const foto = document.querySelector("#camera-output").src;
+  const descricaoInput = document.getElementById("descricao");
+  const descricao = descricaoInput.value.trim();
 
   if (!foto) {
     showResult("Tire uma foto antes de salvar.");
@@ -38,10 +41,11 @@ async function addData() {
   }
 
   const tx = db.transaction('pessoas', 'readwrite');
-  await tx.store.add({ nome, foto });
+  await tx.store.add({ nome, foto, descricao });
   await tx.done;
 
   showResult("Foto salva!");
+  document.getElementById("descricao").value = "";
 }
 
 
@@ -60,6 +64,7 @@ async function getData() {
     const t = document.getElementById("item-template").content.cloneNode(true);
     t.querySelector(".nome").textContent = item.nome;
     t.querySelector(".foto").src = item.foto;
+    t.querySelector(".descricao").textContent = item.descricao || "Sem descrição";
     container.appendChild(t);
   });
 }

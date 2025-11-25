@@ -17,27 +17,22 @@
 <body>
 
   <!-- CAMERA -->
-  <main id="camera" style="display:flex; flex-direction:column; align-items:center; gap:10px; padding:10px;">
+  <main id="camera">
+    <!-- Área da câmera -->
+    <canvas id="camera-sensor"></canvas>
+    <video id="camera-view" autoplay playsinline></video>
+    <img src="" alt="" id="camera-output" class="taken" style="display:none" />
 
-    <!-- Área da câmera (metade superior) -->
-    <div style="width:100%; max-width:500px; height:300px; position:relative; overflow:hidden; border-radius:10px;">
-      <canvas id="camera-sensor" style="display:none;"></canvas>
-      <video id="camera-view" autoplay playsinline style="width:100%; height:100%; object-fit:cover;"></video>
-      <img src="" alt="" id="camera-output"
-        style="display:none; width:100%; height:100%; object-fit:contain; background:#000;" />
-    </div>
-
-    <!-- Botões da câmera -->
-    <div style="display:flex; gap:10px; margin-top:10px;">
+    <!-- Botões da câmera + input descrição -->
+    <div class="camera-buttons">
       <button id="camera-trigger">Tirar foto</button>
       <button id="camera-change">Trocar câmera</button>
+      <input type="text" id="descricao" placeholder="Digite uma descrição para a foto" />
     </div>
-
   </main>
 
-
-  <!-- Botões da PWA -->
-  <div style="text-align:center; margin-top:20px; display:flex; justify-content:center; gap:10px;">
+  <!-- Ações Salvar/Listar/Excluir -->
+  <div class="actions">
     <button id="btnSalvar">Salvar</button>
     <button id="btnListar">Listar</button>
     <button id="btnExcluir">Excluir</button>
@@ -46,15 +41,16 @@
   <!-- Template para listar imagens -->
   <template id="item-template">
     <div class="item">
-      <strong class="nome"></strong><br>
-      <img class="foto" width="180" style="border-radius:8px;">
-      <hr>
+      <img class="foto" alt="Foto salva" />
+      <div>
+        <strong class="nome"></strong>
+        <p class="descricao"></p> <!-- Corrigido: classe adicionada -->
+      </div>
     </div>
   </template>
 
   <output></output>
 
-  <!-- Scripts -->
   <script type="module" src="js/main.js"></script>
   <script type="module" src="js/db.js"></script>
 
